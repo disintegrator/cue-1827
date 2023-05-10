@@ -1,3 +1,7 @@
+# Reproducer for [cue-lang/cue#1827](https://github.com/cue-lang/cue/issues/1827)
+
+`cue export example.com/cuedemo:bad` hangs indefinitely.
+
 ## Environments tested:
 
 `cue version`:
