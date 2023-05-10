@@ -104,7 +104,7 @@ package benthos
 			[string]: string
 		}
 		// A [JSON Pointer][json-pointer] that identifies the specific processors which should be executed by the test. The target can either be a single processor or an array of processors. Alternatively a resource label can be used to identify a processor.
-		//
+		// 
 		// It is also possible to target processors in a separate file by prefixing the target with a path relative to the test file followed by a # symbol.
 		target_processors?: string
 		// A file path relative to the test definition path of a Bloblang file to execute as an alternative to testing processors with the `target_processors` field. This allows you to define unit tests for Bloblang mappings directly.
@@ -964,9 +964,9 @@ package benthos
 		// A list of broker addresses to connect to in order to establish connections. If an item of the list contains commas it will be expanded into multiple addresses.
 		seed_brokers: [...string]
 		// A list of topics to consume from. Multiple comma separated topics can be listed in a single element. When a `consumer_group` is specified partitions are automatically distributed across consumers of a topic, otherwise all partitions are consumed.
-		//
+		// 
 		// Alternatively, it's possible to specify explicit partitions to consume from with a colon after the topic name, e.g. `foo:0` would consume the partition 0 of the topic foo. This syntax supports ranges, e.g. `foo:0-10` would consume partitions 0 through to 10 inclusive.
-		//
+		// 
 		// Finally, it's also possible to specify an explicit offset to consume from by adding another colon after the partition, e.g. `foo:0:10` would consume the partition 0 of the topic foo starting from the offset 10. If the offset is not present (or remains unspecified) then the field `start_from_oldest` determines which offset to start from.
 		topics: [...string]
 		// Whether listed topics should be interpreted as regular expression patterns for matching multiple topics. When topics are specified with explicit partitions this field must remain set to `false`.
@@ -1424,9 +1424,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -1470,9 +1470,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -1514,9 +1514,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -1568,9 +1568,9 @@ package benthos
 	// that input gracefully terminates starts consuming from the next, and so on.
 	sequence: {
 		// EXPERIMENTAL: Provides a way to perform outer joins of arbitrarily structured and unordered data resulting from the input sequence, even when the overall size of the data surpasses the memory available on the machine.
-		//
+		// 
 		// When configured the sequence of inputs will be consumed one or more times according to the number of iterations, and when more than one iteration is specified each iteration will process an entirely different set of messages by sharding them by the ID field. Increasing the number of iterations reduces the memory consumption at the cost of needing to fully parse the data each time.
-		//
+		// 
 		// Each message must be structured (JSON or otherwise processed into a structured form) and the fields will be aggregated with those of other messages sharing the ID. At the end of each iteration the joined messages are flushed downstream before the next iteration begins, hence keeping memory usage limited.
 		sharded_join?: {
 			// The type of join to perform. A `full-outer` ensures that all identifiers seen in any of the input sequences are sent, and is performed by consuming all input sequences before flushing the joined results. An `outer` join consumes all input sequences but only writes data joined from the last input in the sequence, similar to a left or right outer join. With an `outer` join if an identifier appears multiple times within the final sequence input it will be flushed each time it appears. `full-outter` and `outter` have been deprecated in favour of `full-outer` and `outer`.
@@ -1656,11 +1656,11 @@ package benthos
 		// A database [driver](#drivers) to use.
 		driver: string
 		// A Data Source Name to identify the target database.
-		//
+		// 
 		// #### Drivers
-		//
+		// 
 		// The following is a list of supported drivers, their placeholder style, and their respective DSN formats:
-		//
+		// 
 		// | Driver | Data Source Name Format |
 		// |---|---|
 		// | `clickhouse` | [`clickhouse://[username[:password]@][netloc][:port]/dbname[?param1=value1&...&paramN=valueN]`](https://github.com/ClickHouse/clickhouse-go#dsn) |
@@ -1671,13 +1671,13 @@ package benthos
 		// | `oracle` | `oracle://[username[:password]@][netloc][:port]/service_name?server=server2&server=server3` |
 		// | `snowflake` | `username[:password]@account_identifier/dbname/schemaname[?param1=value&...&paramN=valueN]` |
 		// | `trino` | [`http[s]://user[:pass]@host[:port][?parameters]`](https://github.com/trinodb/trino-go-client#dsn-data-source-name)
-		//
+		// 
 		// Please note that the `postgres` driver enforces SSL by default, you can override this with the parameter `sslmode=disable` if required.
-		//
+		// 
 		// The `snowflake` driver supports multiple DSN formats. Please consult [the docs](https://pkg.go.dev/github.com/snowflakedb/gosnowflake#hdr-Connection_String) for more details. For [key pair authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth.html#configuring-key-pair-authentication), the DSN has the following format: `<snowflake_user>@<snowflake_account>/<db_name>/<schema_name>?warehouse=<warehouse>&role=<role>&authenticator=snowflake_jwt&privateKey=<base64_url_encoded_private_key>`, where the value for the `privateKey` parameter can be constructed from an unencrypted RSA private key file `rsa_key.p8` using `openssl enc -d -base64 -in rsa_key.p8 | basenc --base64url -w0` (you can use `gbasenc` insted of `basenc` on OSX if you install `coreutils` via Homebrew). If you have a password-encrypted private key, you can decrypt it using `openssl pkcs8 -in rsa_key_encrypted.p8 -out rsa_key.p8`. Also, make sure fields such as the username are URL-encoded.
 		dsn: string
 		// The query to execute. The style of placeholder to use depends on the driver, some drivers require question marks (`?`) whereas others expect incrementing dollar signs (`$1`, `$2`, and so on). The style to use is outlined in this table:
-		//
+		// 
 		// | Driver | Placeholder Style |
 		// |---|---|
 		// | `clickhouse` | Dollar sign |
@@ -1692,15 +1692,15 @@ package benthos
 		// A [Bloblang mapping](/docs/guides/bloblang/about) which should evaluate to an array of values matching in size to the number of columns specified.
 		args_mapping?: string
 		// An optional list of file paths containing SQL statements to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Glob patterns are supported, including super globs (double star).
-		//
+		// 
 		// Care should be taken to ensure that the statements are idempotent, and therefore would not cause issues when run multiple times after service restarts. If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If a statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_files?: [...string]
 		// An optional SQL statement to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Care should be taken to ensure that the statement is idempotent, and therefore would not cause issues when run multiple times after service restarts.
-		//
+		// 
 		// If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If the statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_statement?: string
 		// An optional maximum amount of time a connection may be idle. Expired connections may be closed lazily before reuse. If value <= 0, connections are not closed due to a connection's idle time.
@@ -1717,11 +1717,11 @@ package benthos
 		// A database [driver](#drivers) to use.
 		driver: string
 		// A Data Source Name to identify the target database.
-		//
+		// 
 		// #### Drivers
-		//
+		// 
 		// The following is a list of supported drivers, their placeholder style, and their respective DSN formats:
-		//
+		// 
 		// | Driver | Data Source Name Format |
 		// |---|---|
 		// | `clickhouse` | [`clickhouse://[username[:password]@][netloc][:port]/dbname[?param1=value1&...&paramN=valueN]`](https://github.com/ClickHouse/clickhouse-go#dsn) |
@@ -1732,9 +1732,9 @@ package benthos
 		// | `oracle` | `oracle://[username[:password]@][netloc][:port]/service_name?server=server2&server=server3` |
 		// | `snowflake` | `username[:password]@account_identifier/dbname/schemaname[?param1=value&...&paramN=valueN]` |
 		// | `trino` | [`http[s]://user[:pass]@host[:port][?parameters]`](https://github.com/trinodb/trino-go-client#dsn-data-source-name)
-		//
+		// 
 		// Please note that the `postgres` driver enforces SSL by default, you can override this with the parameter `sslmode=disable` if required.
-		//
+		// 
 		// The `snowflake` driver supports multiple DSN formats. Please consult [the docs](https://pkg.go.dev/github.com/snowflakedb/gosnowflake#hdr-Connection_String) for more details. For [key pair authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth.html#configuring-key-pair-authentication), the DSN has the following format: `<snowflake_user>@<snowflake_account>/<db_name>/<schema_name>?warehouse=<warehouse>&role=<role>&authenticator=snowflake_jwt&privateKey=<base64_url_encoded_private_key>`, where the value for the `privateKey` parameter can be constructed from an unencrypted RSA private key file `rsa_key.p8` using `openssl enc -d -base64 -in rsa_key.p8 | basenc --base64url -w0` (you can use `gbasenc` insted of `basenc` on OSX if you install `coreutils` via Homebrew). If you have a password-encrypted private key, you can decrypt it using `openssl pkcs8 -in rsa_key_encrypted.p8 -out rsa_key.p8`. Also, make sure fields such as the username are URL-encoded.
 		dsn: string
 		// The table to select from.
@@ -1750,15 +1750,15 @@ package benthos
 		// An optional suffix to append to the select query.
 		suffix?: string
 		// An optional list of file paths containing SQL statements to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Glob patterns are supported, including super globs (double star).
-		//
+		// 
 		// Care should be taken to ensure that the statements are idempotent, and therefore would not cause issues when run multiple times after service restarts. If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If a statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_files?: [...string]
 		// An optional SQL statement to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Care should be taken to ensure that the statement is idempotent, and therefore would not cause issues when run multiple times after service restarts.
-		//
+		// 
 		// If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If the statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_statement?: string
 		// An optional maximum amount of time a connection may be idle. Expired connections may be closed lazily before reuse. If value <= 0, connections are not closed due to a connection's idle time.
@@ -3651,9 +3651,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -3703,9 +3703,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -3760,9 +3760,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -3817,9 +3817,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -4002,7 +4002,7 @@ package benthos
 		// Data source name.
 		data_source_name: string
 		// The query to execute. The style of placeholder to use depends on the driver, some drivers require question marks (`?`) whereas others expect incrementing dollar signs (`$1`, `$2`, and so on). The style to use is outlined in this table:
-		//
+		// 
 		// | Driver | Placeholder Style |
 		// |---|---|
 		// | `clickhouse` | Dollar sign |
@@ -4037,11 +4037,11 @@ package benthos
 		// A database [driver](#drivers) to use.
 		driver: string
 		// A Data Source Name to identify the target database.
-		//
+		// 
 		// #### Drivers
-		//
+		// 
 		// The following is a list of supported drivers, their placeholder style, and their respective DSN formats:
-		//
+		// 
 		// | Driver | Data Source Name Format |
 		// |---|---|
 		// | `clickhouse` | [`clickhouse://[username[:password]@][netloc][:port]/dbname[?param1=value1&...&paramN=valueN]`](https://github.com/ClickHouse/clickhouse-go#dsn) |
@@ -4052,9 +4052,9 @@ package benthos
 		// | `oracle` | `oracle://[username[:password]@][netloc][:port]/service_name?server=server2&server=server3` |
 		// | `snowflake` | `username[:password]@account_identifier/dbname/schemaname[?param1=value&...&paramN=valueN]` |
 		// | `trino` | [`http[s]://user[:pass]@host[:port][?parameters]`](https://github.com/trinodb/trino-go-client#dsn-data-source-name)
-		//
+		// 
 		// Please note that the `postgres` driver enforces SSL by default, you can override this with the parameter `sslmode=disable` if required.
-		//
+		// 
 		// The `snowflake` driver supports multiple DSN formats. Please consult [the docs](https://pkg.go.dev/github.com/snowflakedb/gosnowflake#hdr-Connection_String) for more details. For [key pair authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth.html#configuring-key-pair-authentication), the DSN has the following format: `<snowflake_user>@<snowflake_account>/<db_name>/<schema_name>?warehouse=<warehouse>&role=<role>&authenticator=snowflake_jwt&privateKey=<base64_url_encoded_private_key>`, where the value for the `privateKey` parameter can be constructed from an unencrypted RSA private key file `rsa_key.p8` using `openssl enc -d -base64 -in rsa_key.p8 | basenc --base64url -w0` (you can use `gbasenc` insted of `basenc` on OSX if you install `coreutils` via Homebrew). If you have a password-encrypted private key, you can decrypt it using `openssl pkcs8 -in rsa_key_encrypted.p8 -out rsa_key.p8`. Also, make sure fields such as the username are URL-encoded.
 		dsn: string
 		// The table to insert to.
@@ -4070,15 +4070,15 @@ package benthos
 		// The maximum number of inserts to run in parallel.
 		max_in_flight?: int
 		// An optional list of file paths containing SQL statements to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Glob patterns are supported, including super globs (double star).
-		//
+		// 
 		// Care should be taken to ensure that the statements are idempotent, and therefore would not cause issues when run multiple times after service restarts. If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If a statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_files?: [...string]
 		// An optional SQL statement to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Care should be taken to ensure that the statement is idempotent, and therefore would not cause issues when run multiple times after service restarts.
-		//
+		// 
 		// If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If the statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_statement?: string
 		// An optional maximum amount of time a connection may be idle. Expired connections may be closed lazily before reuse. If value <= 0, connections are not closed due to a connection's idle time.
@@ -4108,11 +4108,11 @@ package benthos
 		// A database [driver](#drivers) to use.
 		driver: string
 		// A Data Source Name to identify the target database.
-		//
+		// 
 		// #### Drivers
-		//
+		// 
 		// The following is a list of supported drivers, their placeholder style, and their respective DSN formats:
-		//
+		// 
 		// | Driver | Data Source Name Format |
 		// |---|---|
 		// | `clickhouse` | [`clickhouse://[username[:password]@][netloc][:port]/dbname[?param1=value1&...&paramN=valueN]`](https://github.com/ClickHouse/clickhouse-go#dsn) |
@@ -4123,13 +4123,13 @@ package benthos
 		// | `oracle` | `oracle://[username[:password]@][netloc][:port]/service_name?server=server2&server=server3` |
 		// | `snowflake` | `username[:password]@account_identifier/dbname/schemaname[?param1=value&...&paramN=valueN]` |
 		// | `trino` | [`http[s]://user[:pass]@host[:port][?parameters]`](https://github.com/trinodb/trino-go-client#dsn-data-source-name)
-		//
+		// 
 		// Please note that the `postgres` driver enforces SSL by default, you can override this with the parameter `sslmode=disable` if required.
-		//
+		// 
 		// The `snowflake` driver supports multiple DSN formats. Please consult [the docs](https://pkg.go.dev/github.com/snowflakedb/gosnowflake#hdr-Connection_String) for more details. For [key pair authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth.html#configuring-key-pair-authentication), the DSN has the following format: `<snowflake_user>@<snowflake_account>/<db_name>/<schema_name>?warehouse=<warehouse>&role=<role>&authenticator=snowflake_jwt&privateKey=<base64_url_encoded_private_key>`, where the value for the `privateKey` parameter can be constructed from an unencrypted RSA private key file `rsa_key.p8` using `openssl enc -d -base64 -in rsa_key.p8 | basenc --base64url -w0` (you can use `gbasenc` insted of `basenc` on OSX if you install `coreutils` via Homebrew). If you have a password-encrypted private key, you can decrypt it using `openssl pkcs8 -in rsa_key_encrypted.p8 -out rsa_key.p8`. Also, make sure fields such as the username are URL-encoded.
 		dsn: string
 		// The query to execute. The style of placeholder to use depends on the driver, some drivers require question marks (`?`) whereas others expect incrementing dollar signs (`$1`, `$2`, and so on). The style to use is outlined in this table:
-		//
+		// 
 		// | Driver | Placeholder Style |
 		// |---|---|
 		// | `clickhouse` | Dollar sign |
@@ -4148,15 +4148,15 @@ package benthos
 		// The maximum number of inserts to run in parallel.
 		max_in_flight?: int
 		// An optional list of file paths containing SQL statements to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Glob patterns are supported, including super globs (double star).
-		//
+		// 
 		// Care should be taken to ensure that the statements are idempotent, and therefore would not cause issues when run multiple times after service restarts. If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If a statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_files?: [...string]
 		// An optional SQL statement to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Care should be taken to ensure that the statement is idempotent, and therefore would not cause issues when run multiple times after service restarts.
-		//
+		// 
 		// If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If the statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_statement?: string
 		// An optional maximum amount of time a connection may be idle. Expired connections may be closed lazily before reuse. If value <= 0, connections are not closed due to a connection's idle time.
@@ -4200,7 +4200,7 @@ package benthos
 		// If a selected output fails to send a message this field determines whether it is
 		// reattempted indefinitely. If set to false the error is instead propagated back
 		// to the input level.
-		//
+		// 
 		// If a message can be routed to >1 outputs it is usually best to set this to true
 		// in order to avoid duplicate messages being routed to an output.
 		retry_until_success?: bool
@@ -4213,7 +4213,7 @@ package benthos
 			// A [Bloblang query](/docs/guides/bloblang/about/) that should return a boolean value indicating whether a message should be routed to the case output. If left empty the case always passes.
 			check?: string
 			// An [output](/docs/components/outputs/about/) for messages that pass the check to be routed to.
-			output?: #Output | null
+			output?: #Output
 			// Indicates whether, if this case passes for a message, the next case should also be tested.
 			continue?: bool
 		}]
@@ -4924,9 +4924,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -4975,9 +4975,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -5186,7 +5186,7 @@ package benthos
 		// Data source name.
 		data_source_name: string
 		// The query to execute. The style of placeholder to use depends on the driver, some drivers require question marks (`?`) whereas others expect incrementing dollar signs (`$1`, `$2`, and so on). The style to use is outlined in this table:
-		//
+		// 
 		// | Driver | Placeholder Style |
 		// |---|---|
 		// | `clickhouse` | Dollar sign |
@@ -5210,11 +5210,11 @@ package benthos
 		// A database [driver](#drivers) to use.
 		driver: string
 		// A Data Source Name to identify the target database.
-		//
+		// 
 		// #### Drivers
-		//
+		// 
 		// The following is a list of supported drivers, their placeholder style, and their respective DSN formats:
-		//
+		// 
 		// | Driver | Data Source Name Format |
 		// |---|---|
 		// | `clickhouse` | [`clickhouse://[username[:password]@][netloc][:port]/dbname[?param1=value1&...&paramN=valueN]`](https://github.com/ClickHouse/clickhouse-go#dsn) |
@@ -5225,9 +5225,9 @@ package benthos
 		// | `oracle` | `oracle://[username[:password]@][netloc][:port]/service_name?server=server2&server=server3` |
 		// | `snowflake` | `username[:password]@account_identifier/dbname/schemaname[?param1=value&...&paramN=valueN]` |
 		// | `trino` | [`http[s]://user[:pass]@host[:port][?parameters]`](https://github.com/trinodb/trino-go-client#dsn-data-source-name)
-		//
+		// 
 		// Please note that the `postgres` driver enforces SSL by default, you can override this with the parameter `sslmode=disable` if required.
-		//
+		// 
 		// The `snowflake` driver supports multiple DSN formats. Please consult [the docs](https://pkg.go.dev/github.com/snowflakedb/gosnowflake#hdr-Connection_String) for more details. For [key pair authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth.html#configuring-key-pair-authentication), the DSN has the following format: `<snowflake_user>@<snowflake_account>/<db_name>/<schema_name>?warehouse=<warehouse>&role=<role>&authenticator=snowflake_jwt&privateKey=<base64_url_encoded_private_key>`, where the value for the `privateKey` parameter can be constructed from an unencrypted RSA private key file `rsa_key.p8` using `openssl enc -d -base64 -in rsa_key.p8 | basenc --base64url -w0` (you can use `gbasenc` insted of `basenc` on OSX if you install `coreutils` via Homebrew). If you have a password-encrypted private key, you can decrypt it using `openssl pkcs8 -in rsa_key_encrypted.p8 -out rsa_key.p8`. Also, make sure fields such as the username are URL-encoded.
 		dsn: string
 		// The table to insert to.
@@ -5241,15 +5241,15 @@ package benthos
 		// An optional suffix to append to the insert query.
 		suffix?: string
 		// An optional list of file paths containing SQL statements to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Glob patterns are supported, including super globs (double star).
-		//
+		// 
 		// Care should be taken to ensure that the statements are idempotent, and therefore would not cause issues when run multiple times after service restarts. If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If a statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_files?: [...string]
 		// An optional SQL statement to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Care should be taken to ensure that the statement is idempotent, and therefore would not cause issues when run multiple times after service restarts.
-		//
+		// 
 		// If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If the statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_statement?: string
 		// An optional maximum amount of time a connection may be idle. Expired connections may be closed lazily before reuse. If value <= 0, connections are not closed due to a connection's idle time.
@@ -5266,11 +5266,11 @@ package benthos
 		// A database [driver](#drivers) to use.
 		driver: string
 		// A Data Source Name to identify the target database.
-		//
+		// 
 		// #### Drivers
-		//
+		// 
 		// The following is a list of supported drivers, their placeholder style, and their respective DSN formats:
-		//
+		// 
 		// | Driver | Data Source Name Format |
 		// |---|---|
 		// | `clickhouse` | [`clickhouse://[username[:password]@][netloc][:port]/dbname[?param1=value1&...&paramN=valueN]`](https://github.com/ClickHouse/clickhouse-go#dsn) |
@@ -5281,13 +5281,13 @@ package benthos
 		// | `oracle` | `oracle://[username[:password]@][netloc][:port]/service_name?server=server2&server=server3` |
 		// | `snowflake` | `username[:password]@account_identifier/dbname/schemaname[?param1=value&...&paramN=valueN]` |
 		// | `trino` | [`http[s]://user[:pass]@host[:port][?parameters]`](https://github.com/trinodb/trino-go-client#dsn-data-source-name)
-		//
+		// 
 		// Please note that the `postgres` driver enforces SSL by default, you can override this with the parameter `sslmode=disable` if required.
-		//
+		// 
 		// The `snowflake` driver supports multiple DSN formats. Please consult [the docs](https://pkg.go.dev/github.com/snowflakedb/gosnowflake#hdr-Connection_String) for more details. For [key pair authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth.html#configuring-key-pair-authentication), the DSN has the following format: `<snowflake_user>@<snowflake_account>/<db_name>/<schema_name>?warehouse=<warehouse>&role=<role>&authenticator=snowflake_jwt&privateKey=<base64_url_encoded_private_key>`, where the value for the `privateKey` parameter can be constructed from an unencrypted RSA private key file `rsa_key.p8` using `openssl enc -d -base64 -in rsa_key.p8 | basenc --base64url -w0` (you can use `gbasenc` insted of `basenc` on OSX if you install `coreutils` via Homebrew). If you have a password-encrypted private key, you can decrypt it using `openssl pkcs8 -in rsa_key_encrypted.p8 -out rsa_key.p8`. Also, make sure fields such as the username are URL-encoded.
 		dsn: string
 		// The query to execute. The style of placeholder to use depends on the driver, some drivers require question marks (`?`) whereas others expect incrementing dollar signs (`$1`, `$2`, and so on). The style to use is outlined in this table:
-		//
+		// 
 		// | Driver | Placeholder Style |
 		// |---|---|
 		// | `clickhouse` | Dollar sign |
@@ -5306,15 +5306,15 @@ package benthos
 		// Whether the query result should be discarded. When set to `true` the message contents will remain unchanged, which is useful in cases where you are executing inserts, updates, etc.
 		exec_only?: bool
 		// An optional list of file paths containing SQL statements to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Glob patterns are supported, including super globs (double star).
-		//
+		// 
 		// Care should be taken to ensure that the statements are idempotent, and therefore would not cause issues when run multiple times after service restarts. If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If a statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_files?: [...string]
 		// An optional SQL statement to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Care should be taken to ensure that the statement is idempotent, and therefore would not cause issues when run multiple times after service restarts.
-		//
+		// 
 		// If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If the statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_statement?: string
 		// An optional maximum amount of time a connection may be idle. Expired connections may be closed lazily before reuse. If value <= 0, connections are not closed due to a connection's idle time.
@@ -5331,11 +5331,11 @@ package benthos
 		// A database [driver](#drivers) to use.
 		driver: string
 		// A Data Source Name to identify the target database.
-		//
+		// 
 		// #### Drivers
-		//
+		// 
 		// The following is a list of supported drivers, their placeholder style, and their respective DSN formats:
-		//
+		// 
 		// | Driver | Data Source Name Format |
 		// |---|---|
 		// | `clickhouse` | [`clickhouse://[username[:password]@][netloc][:port]/dbname[?param1=value1&...&paramN=valueN]`](https://github.com/ClickHouse/clickhouse-go#dsn) |
@@ -5346,9 +5346,9 @@ package benthos
 		// | `oracle` | `oracle://[username[:password]@][netloc][:port]/service_name?server=server2&server=server3` |
 		// | `snowflake` | `username[:password]@account_identifier/dbname/schemaname[?param1=value&...&paramN=valueN]` |
 		// | `trino` | [`http[s]://user[:pass]@host[:port][?parameters]`](https://github.com/trinodb/trino-go-client#dsn-data-source-name)
-		//
+		// 
 		// Please note that the `postgres` driver enforces SSL by default, you can override this with the parameter `sslmode=disable` if required.
-		//
+		// 
 		// The `snowflake` driver supports multiple DSN formats. Please consult [the docs](https://pkg.go.dev/github.com/snowflakedb/gosnowflake#hdr-Connection_String) for more details. For [key pair authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth.html#configuring-key-pair-authentication), the DSN has the following format: `<snowflake_user>@<snowflake_account>/<db_name>/<schema_name>?warehouse=<warehouse>&role=<role>&authenticator=snowflake_jwt&privateKey=<base64_url_encoded_private_key>`, where the value for the `privateKey` parameter can be constructed from an unencrypted RSA private key file `rsa_key.p8` using `openssl enc -d -base64 -in rsa_key.p8 | basenc --base64url -w0` (you can use `gbasenc` insted of `basenc` on OSX if you install `coreutils` via Homebrew). If you have a password-encrypted private key, you can decrypt it using `openssl pkcs8 -in rsa_key_encrypted.p8 -out rsa_key.p8`. Also, make sure fields such as the username are URL-encoded.
 		dsn: string
 		// The table to query.
@@ -5364,15 +5364,15 @@ package benthos
 		// An optional suffix to append to the select query.
 		suffix?: string
 		// An optional list of file paths containing SQL statements to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Glob patterns are supported, including super globs (double star).
-		//
+		// 
 		// Care should be taken to ensure that the statements are idempotent, and therefore would not cause issues when run multiple times after service restarts. If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If a statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_files?: [...string]
 		// An optional SQL statement to execute immediately upon the first connection to the target database. This is a useful way to initialise tables before processing data. Care should be taken to ensure that the statement is idempotent, and therefore would not cause issues when run multiple times after service restarts.
-		//
+		// 
 		// If both `init_statement` and `init_files` are specified the `init_statement` is executed _after_ the `init_files`.
-		//
+		// 
 		// If the statement fails for any reason a warning log will be emitted but the operation of this component will not be stopped.
 		init_statement?: string
 		// An optional maximum amount of time a connection may be idle. Expired connections may be closed lazily before reuse. If value <= 0, connections are not closed due to a connection's idle time.
@@ -5664,9 +5664,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -5759,9 +5759,9 @@ package benthos
 		// Name of the redis master when `kind` is `failover`
 		master?: string
 		// Custom TLS settings can be used to override system defaults.
-		//
+		// 
 		// **Troubleshooting**
-		//
+		// 
 		// Some cloud hosted instances of Redis (such as Azure Cache) might need some hand holding in order to establish stable connections. Unfortunately, it is often the case that TLS issues will manifest as generic error messages such as "i/o timeout". If you're using TLS and are seeing connectivity problems consider setting `enable_renegotiation` to `true`, and ensuring that the server supports at least TLS version 1.2.
 		tls?: {
 			// Whether custom TLS settings are enabled.
@@ -5834,7 +5834,7 @@ package benthos
 	// Chops a stream of messages into tumbling or sliding windows of fixed temporal size, following the system clock.
 	system_window: {
 		// A [Bloblang mapping](/docs/guides/bloblang/about) applied to each message during ingestion that provides the timestamp to use for allocating it a window. By default the function `now()` is used in order to generate a fresh timestamp at the time of ingestion (the processing time), whereas this mapping can instead extract a timestamp from the message itself (the event time).
-		//
+		// 
 		// The timestamp value assigned to `root` must either be a numerical unix time in seconds (with up to nanosecond precision via decimals), or a string in ISO 8601 format. If the mapping fails or provides an invalid result the message will be dropped (with logging to describe the problem).
 		timestamp_mapping?: string
 		// A duration string describing the size of each window. By default windows are aligned to the zeroth minute and zeroth hour on the UTC clock, meaning windows of 1 hour duration will match the turn of each hour in the day, this can be adjusted with the `offset` field.
