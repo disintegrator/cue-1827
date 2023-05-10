@@ -715,7 +715,7 @@ package benthos
 			access_token_secret?: string
 		}
 		// Allows you to specify open authentication via OAuth version 2 using the client credentials token flow.
-		oauth2: {
+		oauth2?: {
 			// Whether to use OAuth version 2 in requests.
 			enabled?: bool
 			// A value used to identify the client to the token provider.
@@ -725,7 +725,7 @@ package benthos
 			// The URL of the token provider.
 			token_url?: string
 			// A list of optional requested permissions.
-			scopes: [...string]
+			scopes?: [...string]
 		}
 		// Allows you to specify basic authentication.
 		basic_auth?: {
@@ -737,7 +737,7 @@ package benthos
 			password?: string
 		}
 		// BETA: Allows you to specify JWT authentication.
-		jwt: {
+		jwt?: {
 			// Whether to use JWT authentication in requests.
 			enabled?: bool
 			// A file with the PEM encoded via PKCS1 or PKCS8 as private key.
@@ -745,11 +745,11 @@ package benthos
 			// A method used to sign the token such as RS256, RS384, RS512 or EdDSA.
 			signing_method?: string
 			// A value used to identify the claims that issued the JWT.
-			claims: {
+			claims?: {
 				[string]: _
 			}
 			// Add optional key/value headers to the JWT.
-			headers: {
+			headers?: {
 				[string]: _
 			}
 		}
@@ -1162,6 +1162,8 @@ package benthos
 		subject: string
 		// An optional queue group to consume as.
 		queue?: string
+		// An optional delay duration on redelivering a message when negatively acknowledged.
+		nak_delay?: string
 		// The maximum number of messages to pull at a time.
 		prefetch_count?: int
 		// Custom TLS settings can be used to override system defaults.
@@ -1196,6 +1198,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Reads messages from NATS JetStream subjects.
@@ -1250,6 +1256,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Watches for updates in a NATS key-value bucket.
@@ -1298,6 +1308,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Subscribe to a NATS Stream subject. Joining a queue is optional and allows multiple clients of a subject to consume using queue semantics.
@@ -1354,6 +1368,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Subscribe to an NSQ instance topic and channel.
@@ -1405,6 +1423,45 @@ package benthos
 		paths: [...string]
 		// Optionally process records in batches. This can help to speed up the consumption of exceptionally large files. When the end of the file is reached the remaining records are processed as a (potentially smaller) batch.
 		batch_count?: int
+	}
+	// Reads messages from an Apache Pulsar server.
+	pulsar: {
+		// A URL to connect to.
+		url: string
+		// A list of topics to subscribe to.
+		topics: [...string]
+		// Specify the subscription name for this consumer.
+		subscription_name: string
+		// Specify the subscription type for this consumer.
+		// 
+		// > NOTE: Using a `key_shared` subscription type will __allow out-of-order delivery__ since nack-ing messages sets non-zero nack delivery delay - this can potentially cause consumers to stall. See [Pulsar documentation](https://pulsar.apache.org/docs/en/2.8.1/concepts-messaging/#negative-acknowledgement) and [this Github issue](https://github.com/apache/pulsar/issues/12208) for more details.
+		subscription_type?: string
+		// Specify the path to a custom CA certificate to trust broker TLS service.
+		tls?: {
+			// An optional path of a root certificate authority file to use. This is a file, often with a .pem extension, containing a certificate chain from the parent trusted root certificate, to possible intermediate signing certificates, to the host certificate.
+			root_cas_file?: string
+		}
+		// Optional configuration of Pulsar authentication methods.
+		auth?: {
+			// Parameters for Pulsar OAuth2 authentication.
+			oauth2?: {
+				// Whether OAuth2 is enabled.
+				enabled?: bool
+				// OAuth2 audience.
+				audience?: string
+				// OAuth2 issuer URL.
+				issuer_url?: string
+				// The path to a file containing a private key.
+				private_key_file?: string
+			}
+			// Parameters for Pulsar Token authentication.
+			token?: {
+				// Whether Token Auth is enabled.
+				enabled?: bool
+				// Actual base64 encoded token.
+				token?: string
+			}
+		}
 	}
 	// Reads messages from a child input until a consumed message passes a [Bloblang query](/docs/guides/bloblang/about/), at which point the input closes.
 	read_until: {
@@ -1868,7 +1925,7 @@ package benthos
 			password?: string
 		}
 		// BETA: Allows you to specify JWT authentication.
-		jwt: {
+		jwt?: {
 			// Whether to use JWT authentication in requests.
 			enabled?: bool
 			// A file with the PEM encoded via PKCS1 or PKCS8 as private key.
@@ -1876,11 +1933,11 @@ package benthos
 			// A method used to sign the token such as RS256, RS384, RS512 or EdDSA.
 			signing_method?: string
 			// A value used to identify the claims that issued the JWT.
-			claims: {
+			claims?: {
 				[string]: _
 			}
 			// Add optional key/value headers to the JWT.
-			headers: {
+			headers?: {
 				[string]: _
 			}
 		}
@@ -1889,9 +1946,11 @@ package benthos
 #Input: or([ for name, config in #AllInputs {
 	(name): config
 }])
-#Input: #Input & {
-	processors?: [...#Processor]
+#Input: {
 	label?: string
+}
+#Input: {
+	processors?: [...#Processor]
 }
 #AllOutputs: {
 	// Sends messages to an AMQP (0.91) exchange. AMQP is a messaging protocol used by
@@ -2809,30 +2868,49 @@ package benthos
 	// Sends messages to a GCP Cloud Pub/Sub topic. [Metadata](/docs/configuration/metadata) from messages are sent as attributes.
 	gcp_pubsub: {
 		// The project ID of the topic to publish to.
-		project?: string
+		project: string
 		// The topic to publish to.
-		topic?: string
-		// The maximum number of messages to have in flight at a given time. Increase this to improve throughput.
-		max_in_flight?: int
-		// The maximum length of time to wait before abandoning a publish attempt for a message.
-		publish_timeout?: string
-		// The ordering key to use for publishing messages.
-		ordering_key?: string
+		topic: string
 		// An optional endpoint to override the default of `pubsub.googleapis.com:443`. This can be used to connect to a region specific pubsub endpoint. For a list of valid values check out [this document.](https://cloud.google.com/pubsub/docs/reference/service_apis_overview#list_of_regional_endpoints)
 		endpoint?: string
-		// Specify criteria for which metadata values are sent as attributes.
+		// The ordering key to use for publishing messages.
+		ordering_key?: string
+		// The maximum number of messages to have in flight at a given time. Increasing this may improve throughput.
+		max_in_flight?: int
+		// Publish a pubsub buffer when it has this many messages
+		count_threshold?: int
+		// Publish a non-empty pubsub buffer after this delay has passed.
+		delay_threshold?: string
+		// Publish a batch when its size in bytes reaches this value.
+		byte_threshold?: int
+		// The maximum length of time to wait before abandoning a publish attempt for a message.
+		publish_timeout?: string
+		// Specify criteria for which metadata values are sent as attributes, all are sent by default.
 		metadata?: {
 			// Provide a list of explicit metadata key prefixes to be excluded when adding metadata to sent messages.
 			exclude_prefixes?: [...string]
 		}
 		// For a given topic, configures the PubSub client's internal buffer for messages to be published.
 		flow_control?: {
-			// Maximum number of buffered messages to be published. If less than or equal to zero, this is disabled.
-			max_outstanding_messages?: int
 			// Maximum size of buffered messages to be published. If less than or equal to zero, this is disabled.
 			max_outstanding_bytes?: int
-			// Configures the behavior when trying to publish additional messages while the flow controller is full. The available options are ignore (disable, default), block, and signal_error (publish results will return an error).
+			// Maximum number of buffered messages to be published. If less than or equal to zero, this is disabled.
+			max_outstanding_messages?: int
+			// Configures the behavior when trying to publish additional messages while the flow controller is full. The available options are block (default), ignore (disable), and signal_error (publish results will return an error).
 			limit_exceeded_behavior?: string
+		}
+		// Configures a batching policy on this output. While the PubSub client maintains its own internal buffering mechanism, preparing larger batches of messages can futher trade-off some latency for throughput.
+		batching?: {
+			// A number of messages at which the batch should be flushed. If `0` disables count based batching.
+			count?: int
+			// An amount of bytes at which the batch should be flushed. If `0` disables size based batching.
+			byte_size?: int
+			// A period in which an incomplete batch should be flushed regardless of its size.
+			period?: string
+			// A [Bloblang query](/docs/guides/bloblang/about/) that should return a boolean value indicating whether a message should end a batch.
+			check?: string
+			// A list of [processors](/docs/components/processors/about) to apply to a batch as it is flushed. This allows you to aggregate and archive the batch however you see fit. Please note that all resulting messages are flushed as a single batch, therefore splitting the batch into smaller batches using these processors is a no-op.
+			processors?: [...#Processor]
 		}
 	}
 	// Sends message parts as files to a HDFS directory.
@@ -2894,7 +2972,7 @@ package benthos
 			access_token_secret?: string
 		}
 		// Allows you to specify open authentication via OAuth version 2 using the client credentials token flow.
-		oauth2: {
+		oauth2?: {
 			// Whether to use OAuth version 2 in requests.
 			enabled?: bool
 			// A value used to identify the client to the token provider.
@@ -2904,7 +2982,7 @@ package benthos
 			// The URL of the token provider.
 			token_url?: string
 			// A list of optional requested permissions.
-			scopes: [...string]
+			scopes?: [...string]
 		}
 		// Allows you to specify basic authentication.
 		basic_auth?: {
@@ -2916,7 +2994,7 @@ package benthos
 			password?: string
 		}
 		// BETA: Allows you to specify JWT authentication.
-		jwt: {
+		jwt?: {
 			// Whether to use JWT authentication in requests.
 			enabled?: bool
 			// A file with the PEM encoded via PKCS1 or PKCS8 as private key.
@@ -2924,11 +3002,11 @@ package benthos
 			// A method used to sign the token such as RS256, RS384, RS512 or EdDSA.
 			signing_method?: string
 			// A value used to identify the claims that issued the JWT.
-			claims: {
+			claims?: {
 				[string]: _
 			}
 			// Add optional key/value headers to the JWT.
-			headers: {
+			headers?: {
 				[string]: _
 			}
 		}
@@ -3435,6 +3513,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Write messages to a NATS JetStream subject.
@@ -3481,6 +3563,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Put messages in a NATS key-value bucket.
@@ -3525,6 +3611,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Publish to a NATS Stream subject.
@@ -3571,6 +3661,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Publish to an NSQ topic.
@@ -3609,6 +3703,45 @@ package benthos
 		}
 		// The maximum number of messages to have in flight at a given time. Increase this to improve throughput.
 		max_in_flight?: int
+	}
+	// Write messages to an Apache Pulsar server.
+	pulsar: {
+		// A URL to connect to.
+		url: string
+		// The topic to publish to.
+		topic: string
+		// Specify the path to a custom CA certificate to trust broker TLS service.
+		tls?: {
+			// An optional path of a root certificate authority file to use. This is a file, often with a .pem extension, containing a certificate chain from the parent trusted root certificate, to possible intermediate signing certificates, to the host certificate.
+			root_cas_file?: string
+		}
+		// The key to publish messages with.
+		key?: string
+		// The ordering key to publish messages with.
+		ordering_key?: string
+		// The maximum number of messages to have in flight at a given time. Increase this to improve throughput.
+		max_in_flight?: int
+		// Optional configuration of Pulsar authentication methods.
+		auth?: {
+			// Parameters for Pulsar OAuth2 authentication.
+			oauth2?: {
+				// Whether OAuth2 is enabled.
+				enabled?: bool
+				// OAuth2 audience.
+				audience?: string
+				// OAuth2 issuer URL.
+				issuer_url?: string
+				// The path to a file containing a private key.
+				private_key_file?: string
+			}
+			// Parameters for Pulsar Token authentication.
+			token?: {
+				// Whether Token Auth is enabled.
+				enabled?: bool
+				// Actual base64 encoded token.
+				token?: string
+			}
+		}
 	}
 	// Output for publishing messages to Pusher API (https://pusher.com)
 	pusher: {
@@ -3995,6 +4128,35 @@ package benthos
 		// The way in which the bytes of messages should be written out into the output data stream. It's possible to write lines using a custom delimiter with the `delim:x` codec, where x is the character sequence custom delimiter.
 		codec?: string
 	}
+	// Writes messages to a Splunk HTTP Endpoint Collector.
+	splunk_hec: {
+		// Full HTTP Endpoint Collector (HEC) URL, ie. https://foobar.splunkcloud.com/services/collector/event
+		url: string
+		// A bot token used for authentication.
+		token: string
+		// Enable gzip compression
+		gzip?: bool
+		// Set the host value to assign to the event data. Overrides existing host field if present.
+		event_host?: string
+		// Set the source value to assign to the event data. Overrides existing source field if present.
+		event_source?: string
+		// Set the sourcetype value to assign to the event data. Overrides existing sourcetype field if present.
+		event_sourcetype?: string
+		// Set the index value to assign to the event data. Overrides existing index field if present.
+		event_index?: string
+		// A number of messages at which the batch should be flushed. If 0 disables count based batching.
+		batching_count?: int
+		// A period in which an incomplete batch should be flushed regardless of its size.
+		batching_period?: string
+		// An amount of bytes at which the batch should be flushed. If 0 disables size based batching. Splunk Cloud recommends limiting content length of HEC payload to 1 MB.
+		batching_byte_size?: int
+		// An optional rate limit resource to restrict API requests with.
+		rate_limit?: string
+		// The maximum number of parallel message batches to have in flight at any given time.
+		max_in_flight?: int
+		// Whether to skip server side certificate verification.
+		skip_cert_verify?: bool
+	}
 	// Executes an arbitrary SQL query for each message.
 	sql: {
 		// A database [driver](#drivers) to use.
@@ -4274,7 +4436,7 @@ package benthos
 			password?: string
 		}
 		// BETA: Allows you to specify JWT authentication.
-		jwt: {
+		jwt?: {
 			// Whether to use JWT authentication in requests.
 			enabled?: bool
 			// A file with the PEM encoded via PKCS1 or PKCS8 as private key.
@@ -4282,11 +4444,11 @@ package benthos
 			// A method used to sign the token such as RS256, RS384, RS512 or EdDSA.
 			signing_method?: string
 			// A value used to identify the claims that issued the JWT.
-			claims: {
+			claims?: {
 				[string]: _
 			}
 			// Add optional key/value headers to the JWT.
-			headers: {
+			headers?: {
 				[string]: _
 			}
 		}
@@ -4295,9 +4457,11 @@ package benthos
 #Output: or([ for name, config in #AllOutputs {
 	(name): config
 }])
-#Output: #Output & {
-	processors?: [...#Processor]
+#Output: {
 	label?: string
+}
+#Output: {
+	processors?: [...#Processor]
 }
 #AllProcessors: {
 	// Archives all the messages of a batch into a single message according to the selected archive format.
@@ -4431,6 +4595,8 @@ package benthos
 	cached: {
 		// The cache resource to read and write processor results from.
 		cache: string
+		// A condition that can be used to skip caching the results from the processors.
+		skip_on?: string
 		// A key to be resolved for each message, if the key already exists in the cache then the cached result is used, otherwise the processors are applied and the result is cached under this key. The key could be static and therefore apply generally to all messages or it could be an interpolated expression that is potentially unique for each message.
 		key: string
 		// An optional expiry period to set for each cache entry. Some caches only have a general TTL and will therefore ignore this setting.
@@ -4573,7 +4739,7 @@ package benthos
 			access_token_secret?: string
 		}
 		// Allows you to specify open authentication via OAuth version 2 using the client credentials token flow.
-		oauth2: {
+		oauth2?: {
 			// Whether to use OAuth version 2 in requests.
 			enabled?: bool
 			// A value used to identify the client to the token provider.
@@ -4583,7 +4749,7 @@ package benthos
 			// The URL of the token provider.
 			token_url?: string
 			// A list of optional requested permissions.
-			scopes: [...string]
+			scopes?: [...string]
 		}
 		// Allows you to specify basic authentication.
 		basic_auth?: {
@@ -4595,7 +4761,7 @@ package benthos
 			password?: string
 		}
 		// BETA: Allows you to specify JWT authentication.
-		jwt: {
+		jwt?: {
 			// Whether to use JWT authentication in requests.
 			enabled?: bool
 			// A file with the PEM encoded via PKCS1 or PKCS8 as private key.
@@ -4603,11 +4769,11 @@ package benthos
 			// A method used to sign the token such as RS256, RS384, RS512 or EdDSA.
 			signing_method?: string
 			// A value used to identify the claims that issued the JWT.
-			claims: {
+			claims?: {
 				[string]: _
 			}
 			// Add optional key/value headers to the JWT.
-			headers: {
+			headers?: {
 				[string]: _
 			}
 		}
@@ -4832,6 +4998,10 @@ package benthos
 			nkey_file?: string
 			// An optional file containing user credentials which consist of an user JWT and corresponding NKey seed.
 			user_credentials_file?: string
+			// An optional plain text user JWT (given along with the corresponding user NKey Seed).
+			user_jwt?: string
+			// An optional plain text user NKey Seed (given along with the corresponding user JWT).
+			user_nkey_seed?: string
 		}
 	}
 	// Noop is a processor that does nothing, the message passes through unchanged. Why? Sometimes doing nothing is the braver option.
@@ -5046,7 +5216,7 @@ package benthos
 			password?: string
 		}
 		// BETA: Allows you to specify JWT authentication.
-		jwt: {
+		jwt?: {
 			// Whether to use JWT authentication in requests.
 			enabled?: bool
 			// A file with the PEM encoded via PKCS1 or PKCS8 as private key.
@@ -5054,11 +5224,11 @@ package benthos
 			// A method used to sign the token such as RS256, RS384, RS512 or EdDSA.
 			signing_method?: string
 			// A value used to identify the claims that issued the JWT.
-			claims: {
+			claims?: {
 				[string]: _
 			}
 			// Add optional key/value headers to the JWT.
-			headers: {
+			headers?: {
 				[string]: _
 			}
 		}
@@ -5120,7 +5290,7 @@ package benthos
 			password?: string
 		}
 		// BETA: Allows you to specify JWT authentication.
-		jwt: {
+		jwt?: {
 			// Whether to use JWT authentication in requests.
 			enabled?: bool
 			// A file with the PEM encoded via PKCS1 or PKCS8 as private key.
@@ -5128,11 +5298,11 @@ package benthos
 			// A method used to sign the token such as RS256, RS384, RS512 or EdDSA.
 			signing_method?: string
 			// A value used to identify the claims that issued the JWT.
-			claims: {
+			claims?: {
 				[string]: _
 			}
 			// Add optional key/value headers to the JWT.
-			headers: {
+			headers?: {
 				[string]: _
 			}
 		}
@@ -5467,8 +5637,7 @@ package benthos
 #Processor: or([ for name, config in #AllProcessors {
 	(name): config
 }])
-#Processor: #Processor & {
-	processors?: [...#Processor]
+#Processor: {
 	label?: string
 }
 #AllCaches: {
